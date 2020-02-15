@@ -15,6 +15,30 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   var _category = Category();
   var _categoryServis = CategoryService();
 
+  List<Widget> _categoryList = List<Widget>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getAllCategories();
+  }
+
+  getAllCategories() async {
+    var catagories = await _categoryServis.getCatagories();
+    catagories.forEach((catagory){
+      print(catagory['name']);
+      _categoryList.add(
+          Card(
+            child: ListTile(
+              title: Text(catagory['name']),
+              subtitle: Text(catagory['description']) ,
+            ),
+          ),
+      );
+    });
+  }
+
   _showFormInDialog(BuildContext context){
     return showDialog(context: context,barrierDismissible: true, builder: (param){
       return AlertDialog(
@@ -59,6 +83,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       ),);
     });
   }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,8 +100,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         ),
       ),
 
-      body: Center(
-        child: Icon(Icons.category, size: 20,color: Colors.grey,),
+      body: Column(
+        children: _categoryList,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
